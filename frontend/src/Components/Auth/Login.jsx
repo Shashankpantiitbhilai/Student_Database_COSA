@@ -3,17 +3,26 @@ import { AdminContext } from "../../App";
 import { Button, Form, FormGroup, Label, Input, Container } from "reactstrap";
 import GoogleIcon from "@mui/icons-material/Google";
 import { loginUser } from "../../services/auth";
-
+import { useParams, useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setIsUserLoggedIn } = useContext(AdminContext);
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    const status = await loginUser(email, password);
-    if (status) {
-      setIsUserLoggedIn(status);
+    try {
+      const status = await loginUser(email, password);
+
+      if (status === 200) {
+        setIsUserLoggedIn(true);
+        navigate("/dashboard");
+      } else {
+        // Handle other status codes or show an error message
+        console.log("Login failed");
+      }
+    } catch (error) {
+      // Handle login error, e.g., network issues, etc.
+      console.error("Login error:", error);
     }
   };
 

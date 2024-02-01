@@ -1,40 +1,53 @@
-import React, { useContext } from "react";
-import axios from "axios";
-import { Button, Form, Row, Col } from "reactstrap";
-import { useNavigate } from "react-router-dom";
-import Search from "./Search";
-import { AdminContext } from "../App";
+import Navbar from "react-bootstrap/Navbar";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { logoutUser } from "../services/auth";
 
-function Navbar() {
-  const { IsUserLoggedIn, setIsUserLoggedIn } = useContext(AdminContext);
-  const navigate = useNavigate();
+function FormExample() {
+  const handleLogout = async (event) => {
+    try {
+      // Call the logoutUser function
+      await logoutUser();
+
+      // Handle any additional logic after logout if needed
+    } catch (error) {
+      // Handle logout error
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
-    <Row xs="2" className="bg-success p-2">
-      <Col>
-        <p className="text-light">User is authenticated</p>
-      </Col>
-      <Col>
-        <Search IsUserLoggedIn={IsUserLoggedIn} />
-      </Col>
-      <Col>
-        <a
-          onClick={async (e) => {
-            e.preventDefault();
-            await axios.post(
-              "http://localhost:8000/auth/logout",
-              {},
-              { withCredentials: true },
-            );
-            setIsUserLoggedIn(null);
-          }}
-          href="/logout"
-        >
-          Logout
-        </a>
-      </Col>
-    </Row>
+    <Navbar className="justify-content-between nav text-dark">
+      <img
+        src="/Logo_of_IIT_Bhilai.png"
+        width={70}
+        alt="IIT-Bhilai-Logo"
+        style={{ position: "relative" }}
+      />
+      <Form className="mx-auto">
+        <Row className="flex-grow-1">
+          <Col xs="auto">
+            <Form.Control
+              type="text"
+              placeholder="Search student by their ID"
+              className="mr-sm-2"
+              style={{ width: "300px", height: "40px" }}
+            />
+          </Col>
+        </Row>
+      </Form>
+      <Form onSubmit={handleLogout}>
+        <Col xs="auto mx-3">
+          <Button type="submit" variant="light">
+            Logout
+          </Button>
+        </Col>
+      </Form>
+    </Navbar>
   );
 }
 
-export default Navbar;
+export default FormExample;

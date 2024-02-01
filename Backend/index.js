@@ -11,7 +11,12 @@ const myPassport = require("./models/passportConfig"); // Adjust the path accord
 require("dotenv").config();
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+const corsOptions = {
+  origin: 'http://localhost:3000', // Replace with your frontend's URL
+  credentials: true, // Enable credentials (e.g., cookies)
+};
+
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 connectDB();
