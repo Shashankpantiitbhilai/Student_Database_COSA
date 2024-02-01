@@ -37,6 +37,7 @@ passport.use(
           googleId: profile.id,
           username: profile.emails[0].value,
           name: profile.displayName,
+          strategy: "google",
         });
 
         await newUser.save();
@@ -49,31 +50,12 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  let key = {
-    id: user._id,
-    type: "User",
-  };
-
-  if (user.googleId) {
-    key = {
-      id: user.googleId,
-      type: "Google",
-    };
-  }
-
-  done(null, key);
+  done(null, user);
 });
 
-passport.deserializeUser(async (key, done) => {
+passport.deserializeUser(async (userKey, done) => {
   try {
-    let user = null;
-
-    if (key.type === "Google") {
-      user = await User.findOne({ googleId: key.id });
-    } else {
-      user = await User.findById(key.id);
-    }
-
+    let user = await User.findById(userKey._id);
     done(null, user);
   } catch (err) {
     done(err);
