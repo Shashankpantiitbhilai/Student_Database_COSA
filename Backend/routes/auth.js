@@ -11,6 +11,29 @@ const {
   User,
 } = require("../models/student");
 const passport = require("../models/passportConfig");
+const { connectDB, closeDB } = require("../db");
+router.post("/fetch", async (req, res) => {
+  try {
+    await connectDB();
+
+    const student = await Student.findOne({ ID_No: req.body.student_ID });
+    console.log(student);
+    const scitechPor = await ScietechPOR.find({ student: student });
+    const cultPor = await CultPOR.find({ student: student });
+    const sportPor = await SportsPOR.find({ student: student });
+    const acadPor = await AcadPOR.find({ student: student });
+    const PORs = [...scitechPor, ...cultPor, ...sportPor, ...acadPor];
+
+    const st = {
+      student: student,
+      PORS: PORs,
+    };
+    return res.status(200).json(st);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false, message: "process failed" });
+  }
+});
 
 // Session Status
 router.get("/fetchAuth", function (req, res) {
@@ -44,9 +67,7 @@ router.post("/register", async (req, res) => {
       console.error(err);
       return res.status(500).json({ message: "Internal Server Error" });
     }
-    return res
-      .status(201)
-      .json({ message: "Registration successful", user: newUser });
+    return res.redirect("/");
   });
 });
 
