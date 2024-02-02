@@ -1,40 +1,47 @@
 import React, { useContext } from "react";
 import axios from "axios";
-import { Button, Form, Row, Col } from "reactstrap";
+import { Button, Col, Navbar } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import Search from "./Search";
 import { AdminContext } from "../App";
 
-function Navbar() {
+function CustomNavbar() {
   const { IsUserLoggedIn, setIsUserLoggedIn } = useContext(AdminContext);
   const navigate = useNavigate();
 
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        "http://localhost:8000/auth/logout",
+        {},
+        { withCredentials: true },
+      );
+      setIsUserLoggedIn(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
-    <Row xs="2" className="bg-success p-2">
-      <Col>
-        <p className="text-light">User is authenticated</p>
+    <Navbar className="justify-content-between nav text-dark">
+      <Col xs="auto">
+        <img
+          src="/Logo_of_IIT_Bhilai.png"
+          width={70}
+          alt="IIT-Bhilai-Logo"
+          style={{ position: "relative" }}
+        />
       </Col>
-      <Col>
-        <Search IsUserLoggedIn={IsUserLoggedIn} />
-      </Col>
-      <Col>
-        <a
-          onClick={async (e) => {
-            e.preventDefault();
-            await axios.post(
-              "http://localhost:8000/auth/logout",
-              {},
-              { withCredentials: true },
-            );
-            setIsUserLoggedIn(null);
-          }}
-          href="/logout"
-        >
+      <Col xs="auto"></Col>
+
+      <Col xs="auto mx-3">
+        <Button type="submit" className="logout">
           Logout
-        </a>
+        </Button>
       </Col>
-    </Row>
+    </Navbar>
   );
 }
 
-export default Navbar;
+export default CustomNavbar;
