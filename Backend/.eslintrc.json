@@ -1,0 +1,7 @@
+{
+  "plugins": ["node"],
+  "rules": {
+    "node/no-unpublished-require": ["error", { "allowModules": ["some-module"] }]
+    // Add other rules and configurations as needed
+  }
+}

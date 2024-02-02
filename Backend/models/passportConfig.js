@@ -34,6 +34,7 @@ passport.use(
 
         // If user doesn't exist, create a new user in your database
         const newUser = new User({
+          googleId: profile.id,
           username: profile.emails[0].value,
           name: profile.displayName,
           strategy: "google",

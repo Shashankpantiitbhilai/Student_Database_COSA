@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AddUser from "./AddUser";
 import Login from "./Components/Auth/Login";
 import Register from "./Components/Auth/Register";
+import Dashboard from "./Components/dashboard";
 import GoogleRegister from "./Components/Auth/GoogleRegister";
 import { fetchCredentials } from "./services/auth";
 
@@ -25,17 +26,21 @@ function App() {
   if (IsUserLoggedIn) {
     routes = (
       <Routes>
-        <Route path="/" element={<AddUser />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="/register/google/:id" element={<GoogleRegister />} />
-        {/* <Route path='/logout' element={<Logout/>} /> */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     );
   } else {
     routes = (
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />}>
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+        <Route path="/register" element={<Register />}>
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
         <Route path="/register/google/:id" element={<GoogleRegister />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

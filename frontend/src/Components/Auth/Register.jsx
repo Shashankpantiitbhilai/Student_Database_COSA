@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AdminContext } from "../../App";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input, Container } from "reactstrap";
 import GoogleIcon from "@mui/icons-material/Google";
 import { registerUser } from "../../services/auth";
@@ -10,11 +11,17 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setIsUserLoggedIn } = useContext(AdminContext);
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
-    const status = await registerUser(name, ID, email, password);
-    if (status) {
-      setIsUserLoggedIn(true);
+    try {
+      const status = await registerUser(name, ID, email, password);
+      if (status) {
+        setIsUserLoggedIn(true);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Registration Error:", error);
+      // Handle the error as needed
     }
   };
 

@@ -62,10 +62,10 @@ export async function loginUser(email, password) {
     if (response.status === 200) {
       return response.data;
     } else {
-      return null;
+      console.log("errot");
     }
   } catch (error) {
-    return null;
+    console.log("hi");
   }
 }
 
